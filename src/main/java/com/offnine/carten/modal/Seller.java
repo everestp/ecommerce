@@ -46,8 +46,9 @@ public class Seller {
     @Embedded
     private BankDetails bankDetails= new BankDetails();
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private Address pickupAddress = new Address();
+    //    @OneToMany(cascade = CascadeType.ALL)
+
+    // private Address pickupAddres;
 
     private String GSTIN;
 

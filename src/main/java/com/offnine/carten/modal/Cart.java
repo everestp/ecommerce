@@ -25,7 +25,7 @@ import java.util.HashSet;
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
 
     @OneToOne

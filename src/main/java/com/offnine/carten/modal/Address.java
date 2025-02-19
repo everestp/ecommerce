@@ -19,11 +19,12 @@ import lombok.Setter;
 public class Address{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private Long id;
 
     private String name;
 
     private String locality;
+
     private String address;
 
     private String city;
