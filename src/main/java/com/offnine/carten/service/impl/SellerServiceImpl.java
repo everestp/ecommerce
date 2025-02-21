@@ -8,6 +8,7 @@ import com.offnine.carten.Repo.SellerRepo;
 import com.offnine.carten.config.JwtProvider;
 import com.offnine.carten.domain.AccountStatus;
 import com.offnine.carten.domain.USER_ROLE;
+import com.offnine.carten.exception.SellerException;
 import com.offnine.carten.modal.Address;
 import com.offnine.carten.modal.Seller;
 import java.util.List;
@@ -54,8 +55,8 @@ public  class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
-	public Seller getSellerById(Long id) throws Exception {
-		return sellerRepo.findById(id).orElseThrow(()-> new Exception("Seller not found with id"));
+	public Seller getSellerById(Long id) throws SellerException {
+		return sellerRepo.findById(id).orElseThrow(()-> new SellerException("Seller not found with id" +id));
 	}
 
 	@Override

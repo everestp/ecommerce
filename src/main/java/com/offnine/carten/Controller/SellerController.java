@@ -99,7 +99,7 @@ public ResponseEntity<Seller> createSeller(@RequestBody Seller seller) throws Ex
 
 }
 @GetMapping("/{id}")
-public ResponseEntity<Seller> getSellerById(@PathVariable Long id) throws Exception {
+public ResponseEntity<Seller> getSellerById(@PathVariable Long id) throws SellerException{
    Seller seller = sellerService.getSellerById(id);
    return new ResponseEntity<>(seller,HttpStatus.OK);
 }
@@ -130,7 +130,6 @@ public ResponseEntity<List<Seller>> getAllSellers(@RequestParam(required = false
 public ResponseEntity<Seller> updateSeller(@RequestHeader("Authorization") String jwt, @RequestBody Seller seller) throws Exception{
     Seller profile = sellerService.getSellerProfile(jwt);
     Seller updatedSeller = sellerService.updateSeller(profile.getId(), seller);
-  System.out.println("fshjdkjfhsjfhsjkfhsfhskfh does this is callled");
     return ResponseEntity.ok(updatedSeller);
     
 }
