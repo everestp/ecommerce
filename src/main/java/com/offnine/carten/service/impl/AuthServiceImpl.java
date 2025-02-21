@@ -20,17 +20,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.offnine.carten.Repo.CartRepo;
+import com.offnine.carten.Repo.SellerRepo;
 import com.offnine.carten.Repo.UserRepo;
 import com.offnine.carten.Repo.VerificationCodeRepo;
 import com.offnine.carten.Utils.OtpUtil;
 import com.offnine.carten.config.JwtProvider;
 import com.offnine.carten.domain.USER_ROLE;
 import com.offnine.carten.modal.Cart;
+import com.offnine.carten.modal.Seller;
 import com.offnine.carten.modal.User;
 import com.offnine.carten.modal.VerificationCode;
 import com.offnine.carten.reponse.AuthResponse;
-import com.offnine.carten.reponse.LoginRequest;
 import com.offnine.carten.reponse.SignUpRequest;
+import com.offnine.carten.request.LoginRequest;
 import com.offnine.carten.service.AuthService;
 import com.offnine.carten.service.EmailService;
 
@@ -59,6 +61,7 @@ public class AuthServiceImpl implements AuthService{
         private final  VerificationCodeRepo verificationCodeRepo;
         private final EmailService emailService;
         private final CustomUserServiceImpl customUserService;
+        private final SellerRepo sellerRepo;
        
     @Override
     public String createUser(SignUpRequest req) throws Exception {
@@ -93,14 +96,31 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public void sentLoginOtp(String email) throws Exception {
+    public void sentLoginOtp(String email,USER_ROLE role) throws Exception {
         String SIGNING_PREFIX ="signing_";
+        //  String SELLER_PREFIX = "seller_";
         if(email.startsWith(SIGNING_PREFIX)){
             email = email.substring(SIGNING_PREFIX.length());
-            User user =userRepo.findByEmail(email);
-            if(user==null){
-                throw new Exception("User not found with email");
+            if(role.equals(USER_ROLE.ROLE_SELLER)){
+
+                Seller seller =sellerRepo.findByEmail(email);
+                if(seller== null){
+                    throw new Exception("Seller not found with email :-"+email);
+                }
+
+
             }
+            else{
+                
+                User user =userRepo.findByEmail(email);
+                if(user==null){
+                    throw new Exception("user not fouund with email :-"+email);
+                }
+
+
+            }
+
+        
         }
         VerificationCode isExist = verificationCodeRepo.findByEmail(email);
         if(isExist!=null){
@@ -120,7 +140,7 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public AuthResponse signing(LoginRequest req) {
+    public AuthResponse signing(LoginRequest req) throws Exception {
         String userName = req.getEmail();
         String otp = req.getOtp();
         Authentication authentication = authentication(userName,otp);
@@ -138,14 +158,20 @@ public class AuthServiceImpl implements AuthService{
                 return authResponse;
 
     }
-    private Authentication authentication(String userName, String otp){
+    private Authentication authentication(String userName, String otp) throws Exception{
+        String SELLER_PREFIX = "seller_";
        UserDetails userDetails = customUserService.loadUserByUsername(userName);
+       if(userName.startsWith(SELLER_PREFIX)){
+        userName = userName.substring(SELLER_PREFIX.length());
+
+       }
+
        if(userDetails == null){
-        throw new BadCredentialsException("Invalid username");
+        throw new Exception("Invalid username");
        }
        VerificationCode verificationCode = verificationCodeRepo.findByEmail(userName);
        if(verificationCode==null || !verificationCode.getOtp().equals(otp)){
-        throw new BadCredentialsException("Wrong OTP");
+        throw new Exception("Wrong OTP");
        }
        return  new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
 

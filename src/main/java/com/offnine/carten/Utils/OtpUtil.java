@@ -2,6 +2,8 @@ package com.offnine.carten.Utils;
 
 import java.util.Random;
 
+import org.springframework.stereotype.Component;
+@Component
 public class OtpUtil {
        public static String generateOtp(){
         int otpLength =6;

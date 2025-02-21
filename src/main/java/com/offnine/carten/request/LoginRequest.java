@@ -1,4 +1,4 @@
-package com.offnine.carten.reponse;
+package com.offnine.carten.request;
 
 import lombok.Data;
 

@@ -13,8 +13,9 @@ import com.offnine.carten.modal.User;
 import com.offnine.carten.modal.VerificationCode;
 import com.offnine.carten.reponse.ApiResponse;
 import com.offnine.carten.reponse.AuthResponse;
-import com.offnine.carten.reponse.LoginRequest;
 import com.offnine.carten.reponse.SignUpRequest;
+import com.offnine.carten.request.LoginOtpRequest;
+import com.offnine.carten.request.LoginRequest;
 import com.offnine.carten.service.AuthService;
 
 @RestController
@@ -44,9 +45,9 @@ private AuthService authService;
     }
 
     @PostMapping("/sent/login-signup-otp")
-    public ResponseEntity<ApiResponse> sentOtpHandler(@RequestBody VerificationCode req)  throws Exception{
+    public ResponseEntity<ApiResponse> sentOtpHandler(@RequestBody LoginOtpRequest req)  throws Exception{
 
-  authService.sentLoginOtp(req.getEmail());
+  authService.sentLoginOtp(req.getEmail(),req.getRole());
 ApiResponse res = new ApiResponse();
 res.setMessage("otp sent sucessfully");
             return ResponseEntity.ok(res);
