@@ -8,6 +8,7 @@ import com.offnine.carten.Repo.SellerRepo;
 import com.offnine.carten.config.JwtProvider;
 import com.offnine.carten.domain.AccountStatus;
 import com.offnine.carten.domain.USER_ROLE;
+import com.offnine.carten.exception.ProductException;
 import com.offnine.carten.exception.SellerException;
 import com.offnine.carten.modal.Address;
 import com.offnine.carten.modal.Seller;
@@ -25,7 +26,7 @@ public  class SellerServiceImpl implements SellerService {
 	private final AddressRepo addressRepo;
 
 	@Override
-	 public Seller getSellerProfile(String jwt) throws Exception {
+	 public Seller getSellerProfile(String jwt) throws ProductException,SellerException {
 		String email = jwtProvider.getEmailFromJwtToken(jwt);
 		return this.getSellerByEmail(email);
 
@@ -60,10 +61,10 @@ public  class SellerServiceImpl implements SellerService {
 	}
 
 	@Override
-	public Seller getSellerByEmail(String email) throws Exception {
+	public Seller getSellerByEmail(String email) throws SellerException {
 		Seller seller = sellerRepo.findByEmail(email);
 		if(seller==null){
-			throw new Exception("Seller not found....");
+			throw new SellerException("Seller not found....");
 		}
 				return seller;
 	}

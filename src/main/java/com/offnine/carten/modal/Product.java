@@ -24,8 +24,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class Product {
-    @Id
+public class Product  {
+    
+@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
@@ -56,8 +57,7 @@ public class Product {
 
     private LocalDateTime createdAt;
 
-    @ElementCollection // This creates a separate table for sizes
-    private List<String> sizes = new ArrayList<>(); // Fixed: Changed from String to List<String>
+   private String sizes;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
