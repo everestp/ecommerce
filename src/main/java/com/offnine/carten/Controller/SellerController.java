@@ -1,9 +1,6 @@
 package com.offnine.carten.Controller;
 
-import java.nio.channels.Selector;
-import java.rmi.ServerException;
 
-import org.apache.catalina.connector.Response;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
+
 
 import com.offnine.carten.Repo.VerificationCodeRepo;
 import com.offnine.carten.Utils.OtpUtil;
@@ -27,11 +24,11 @@ import com.offnine.carten.exception.SellerException;
 import com.offnine.carten.modal.Seller;
 import com.offnine.carten.modal.SellerReport;
 import com.offnine.carten.modal.VerificationCode;
-import com.offnine.carten.reponse.ApiResponse;
 import com.offnine.carten.reponse.AuthResponse;
 import com.offnine.carten.request.LoginRequest;
 import com.offnine.carten.service.AuthService;
 import com.offnine.carten.service.EmailService;
+import com.offnine.carten.service.SellerReportService;
 import com.offnine.carten.service.SellerService;
 
 import lombok.RequiredArgsConstructor;
@@ -46,10 +43,11 @@ public class SellerController {
     private final SellerService sellerService;
     private final VerificationCodeRepo  verificationCodeRepo;
     private final AuthService authService;
-    @Autowired
-    private  OtpUtil otpUtil;
+    
     private final EmailService emailService;
-    private final JwtProvider jwtProvider;
+
+    private final SellerReportService sellerReportService;
+
 
 @PostMapping("/login")
 ResponseEntity<AuthResponse> loginSeller(
@@ -110,14 +108,14 @@ public ResponseEntity<Seller> getSellerByJwt(@RequestHeader("Authorization") Str
     return new  ResponseEntity<>(seller,HttpStatus.OK);
 
 }
-// @GetMapping("/report")
-// public ResponseEntity<SellerReport> getSellerReport(@RequestHeader("Authorization") String jwt) throws Exception {
-//     String email = jwtProvider.getEmailFromJwtToken(jwt);
-//     Seller seller = sellerService.getSellerByEmail(email);
-//     SellerReport report = sellerReportService.getSellerReport(seller);
-//     return new ResponseEntity<>(report,HttpStatus.OK);
+@GetMapping("/report")
+public ResponseEntity<SellerReport> getSellerReport(@RequestHeader("Authorization") String jwt) throws Exception {
+  
+    Seller seller = sellerService.getSellerProfile(jwt);
+    SellerReport report = sellerReportService.getSellerReport(seller);
+    return new ResponseEntity<>(report,HttpStatus.OK);
    
-// }
+}
 
 @GetMapping("path")
 public ResponseEntity<List<Seller>> getAllSellers(@RequestParam(required = false) AccountStatus status) {

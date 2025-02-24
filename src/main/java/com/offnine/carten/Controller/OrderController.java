@@ -20,10 +20,14 @@ import com.offnine.carten.modal.Address;
 import com.offnine.carten.modal.Cart;
 import com.offnine.carten.modal.Order;
 import com.offnine.carten.modal.OrderItem;
+import com.offnine.carten.modal.Seller;
+import com.offnine.carten.modal.SellerReport;
 import com.offnine.carten.modal.User;
 import com.offnine.carten.reponse.PaymentLinkResponse;
 import com.offnine.carten.service.CartService;
 import com.offnine.carten.service.OrderService;
+import com.offnine.carten.service.SellerReportService;
+import com.offnine.carten.service.SellerService;
 import com.offnine.carten.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -37,6 +41,9 @@ public class OrderController {
     private final OrderService orderService;
     private final UserService userService;
     private final CartService cartService;
+    private final SellerService sellerService;
+    private SellerReportService sellerReportService;
+
 
 @PostMapping()
 public ResponseEntity<PaymentLinkResponse> createOrderHandler(
@@ -62,7 +69,7 @@ public ResponseEntity<List<Order>> userOrderHistoryHandler(
 
     User user = userService.findUserByJwtToken(jwt);
     List<Order> orders = orderService.userOrderHistory(user.getId());
-    return new ResponseEntity<>(orders,HttpStatus.ACCEPTED)
+    return new ResponseEntity<>(orders,HttpStatus.ACCEPTED);
 
 }
 
@@ -98,6 +105,11 @@ public ResponseEntity<Order> cancelOrder(
     User user = userService.findUserByJwtToken(jwt);
     Order order = orderService.findOrderById(orderId);
 
+    Seller seller =sellerService.getSellerById(order.getSellerId());
+    SellerReport report = sellerReportService.getSellerReport(seller);
+    report.setCanceledOrders(report.getCanceledOrders()+1);
+    report.setTotalRefunds(report.getTotalRefunds() + order.getTotalSellingPrice());
+    sellerReportService.updateSellerReport(report)
 
     
  return ResponseEntity.ok(order);
