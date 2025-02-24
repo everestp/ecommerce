@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Service;
 
 import com.offnine.carten.Repo.CartRepo;
 import com.offnine.carten.Repo.CouponRepo;
@@ -13,6 +14,10 @@ import com.offnine.carten.modal.Coupon;
 import com.offnine.carten.modal.User;
 import com.offnine.carten.service.CouponService;
 
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
 public class CouponServiceImpl implements CouponService {
     private final CouponRepo couponRepo;
     private final CartRepo cartRepo;
@@ -20,7 +25,7 @@ public class CouponServiceImpl implements CouponService {
 
 
     @Override
-    public Cart appyCoupon(String code, double orderValue, User user) {
+    public Cart appyCoupon(String code, double orderValue, User user) throws Exception {
 
         Coupon coupon = couponRepo.findByCode(code);
         Cart cart = cartRepo.findByUserId(user.getId());
@@ -30,7 +35,7 @@ public class CouponServiceImpl implements CouponService {
 
 
         if(user.getUsedCoupons().contains(coupon)){
-            throw new Exception("Coupon Already used")
+            throw new Exception("Coupon Already used");
         }
 
         if(orderValue < coupon.getMinimumOrderValue()){
@@ -67,8 +72,8 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public Coupon findCouponById(Long id) {
-        return couponRepo.findById(id).orElseThrow(()-> new Exception("Coupon not found Exception"))
+    public Coupon findCouponById(Long id) throws Exception {
+        return couponRepo.findById(id).orElseThrow(()-> new Exception("Coupon not found Exception"));
 
     }
 
@@ -86,7 +91,7 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     @PreAuthorize("hasRole =('ADMIN')")
-    public void deleteCoupon(Long id) {
+    public void deleteCoupon(Long id) throws Exception {
        findCouponById(id);
        couponRepo.deleteById(id);
           

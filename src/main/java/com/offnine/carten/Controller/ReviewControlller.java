@@ -75,7 +75,7 @@ public ResponseEntity<ApiResponse> deleteReview (
 ) throws Exception{
     User user =userService.findUserByJwtToken(jwt);
  reviewService.deleteReview(reviewId, user.getId());
- ApiResponse res = new ApiResponse()
+ ApiResponse res = new ApiResponse(); 
  res.setMessage("Review Delete Sucessfully");
 return ResponseEntity.ok(res);
 

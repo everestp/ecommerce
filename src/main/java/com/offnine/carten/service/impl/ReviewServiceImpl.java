@@ -20,7 +20,7 @@ public class ReviewServiceImpl  implements ReviewService{
 
 
     private final ReviewRepo reviewRepo;
-    private final ReviewService reviewService;
+   
 
     @Override
     public Review createReview(CreateReviewRequest req, User user,Product product) {
@@ -30,7 +30,7 @@ public class ReviewServiceImpl  implements ReviewService{
         review.setReviewText(req.getReviewText());
         review.setProductImages(req.getProductImage());
         review.setRating(req.getReviewRating());
-        product.getReviews().add(review)
+        product.getReviews().add(review);
         return reviewRepo.save(review);
 
     }

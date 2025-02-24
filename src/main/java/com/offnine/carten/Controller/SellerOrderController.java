@@ -39,7 +39,7 @@ public class SellerOrderController {
         
 
      }
-     @PatchMapping("/{orderId/status/{orderStatus}")
+     @PatchMapping("/{orderId}/status/{orderStatus}")
      public ResponseEntity<Order>  updateOrderHandler(
         @RequestHeader("Authorization") String jwt,
         @PathVariable OrderStatus orderStatus,

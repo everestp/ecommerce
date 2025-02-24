@@ -70,7 +70,7 @@ public ResponseEntity<?> deleteCoupon(@PathVariable Long id){
 
 @GetMapping("/admin/all")
 public ResponseEntity<List<Coupon>> getAllCoupon() {
-List<Coupon> coupons = couponService.findAllcoupons()
+List<Coupon> coupons = couponService.findAllcoupons();
 
    return ResponseEntity.ok(coupons);
 
