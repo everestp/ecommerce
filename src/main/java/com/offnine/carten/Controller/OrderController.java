@@ -109,7 +109,7 @@ public ResponseEntity<Order> cancelOrder(
     SellerReport report = sellerReportService.getSellerReport(seller);
     report.setCanceledOrders(report.getCanceledOrders()+1);
     report.setTotalRefunds(report.getTotalRefunds() + order.getTotalSellingPrice());
-    sellerReportService.updateSellerReport(report)
+    sellerReportService.updateSellerReport(report);
 
     
  return ResponseEntity.ok(order);
