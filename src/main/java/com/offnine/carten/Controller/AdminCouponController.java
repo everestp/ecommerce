@@ -63,7 +63,7 @@ public ResponseEntity<Coupon> postMethodName(@RequestBody Coupon coupon) {
 }
 
 @DeleteMapping("/admin/delete/{id}")
-public ResponseEntity<?> deleteCoupon(@PathVariable Long id){
+public ResponseEntity<?> deleteCoupon(@PathVariable Long id) throws Exception{
     couponService.deleteCoupon(id);
     return ResponseEntity.ok("Coupon  is delete Sucessfully");
 }
