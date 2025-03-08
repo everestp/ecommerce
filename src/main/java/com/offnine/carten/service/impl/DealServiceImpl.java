@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.offnine.carten.Repo.DealRepo;
 import com.offnine.carten.Repo.HomeCategoryRepo;
@@ -13,7 +14,10 @@ import com.offnine.carten.modal.HomeCategory;
 import com.offnine.carten.service.DealService;
 import com.offnine.carten.service.HomeService;
 
+import lombok.RequiredArgsConstructor;
 
+@Service
+@RequiredArgsConstructor
 public class DealServiceImpl  implements DealService{
     @Autowired
     private DealRepo dealRepo;
@@ -27,8 +31,8 @@ public class DealServiceImpl  implements DealService{
     }
 
     @Override
-    public Deal createDeal(Deal deal) {
-        HomeCategory category = homeCategoryRepo.findById(deal.getCategory().getId()).orElseThrow(()-> new Exception("Deal not  found"))
+    public Deal createDeal(Deal deal) throws Exception {
+        HomeCategory category = homeCategoryRepo.findById(deal.getCategory().getId()).orElseThrow(()-> new Exception("Deal not  found"));
        Deal neWDeal = dealRepo.save(deal);
        neWDeal.setCategory(category);
        neWDeal.setDiscount(deal.getDiscount());
@@ -37,7 +41,7 @@ public class DealServiceImpl  implements DealService{
     }
 
     @Override
-    public Deal updateDeal(Deal deal,Long id) {
+    public Deal updateDeal(Deal deal,Long id) throws Exception {
        Deal existingDeal = dealRepo.findById(id).orElse(null);
        HomeCategory category = homeCategoryRepo.findById(deal.getCategory().getId()).orElse(null);
        if(existingDeal !=null){
@@ -49,7 +53,7 @@ public class DealServiceImpl  implements DealService{
         }
         return dealRepo.save(existingDeal);
        }
-       throw new Exception("Deal not found")
+       throw new Exception("Deal not found");
     }
 
     @Override

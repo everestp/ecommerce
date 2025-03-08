@@ -1,7 +1,5 @@
 package com.offnine.carten.Controller;
 
-import java.net.ResponseCache;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,8 +7,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.offnine.carten.exception.ProductException;
 import com.offnine.carten.modal.Product;
 import com.offnine.carten.modal.User;
 import com.offnine.carten.modal.Wishlist;

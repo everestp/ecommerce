@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/sellers/products")
+@RequestMapping("sellers/products")
 public class SellerProductController {
 
     private final SellerService sellerService;

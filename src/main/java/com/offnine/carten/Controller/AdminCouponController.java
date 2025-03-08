@@ -44,11 +44,17 @@ public ResponseEntity<Cart> applyCoupon(
     @RequestParam double orderValue,
     @RequestHeader("Authorization") String jwt
     
-){
-    User user = userService.findUserByJwtToken(jwt);
+) throws Exception{
+    User user = null;
+    try {
+        user = userService.findUserByJwtToken(jwt);
+    } catch (Exception e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+    }
     Cart cart;
     if(apply.equals("true")){
-        cart= couponService.appyCoupon(code,orderValue , user)
+        cart= couponService.appyCoupon(code,orderValue , user);
     }
     else{
         cart = couponService.removeCoupon(code, user);

@@ -13,7 +13,7 @@ public interface CartService {
         int quantity
     ) throws Exception;
 
-    public Cart findUserCart(User user);
+    public Cart findUserCart(User user) throws Exception;
 
     
 }

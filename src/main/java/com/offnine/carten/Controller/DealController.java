@@ -29,7 +29,7 @@ public class DealController {
 @PostMapping()
 public ResponseEntity<Deal> createDeal(
     @RequestBody Deal deals
-) {
+) throws Exception {
     Deal createdDeal = dealService.createDeal(deals);
     return new ResponseEntity<>(createdDeal,HttpStatus.ACCEPTED);
  
@@ -52,7 +52,7 @@ public ResponseEntity<ApiResponse> deleteDeal(
   dealService.deleteDeal(id);
   ApiResponse res= new ApiResponse();
   res.setMessage("Deal deleted");
-  res.
+  
   
 return  new ResponseEntity<>(res,HttpStatus.ACCEPTED);
 

@@ -2,9 +2,6 @@ package com.offnine.carten.Controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.offnine.carten.exception.ProductException;
-import com.offnine.carten.exception.SellerException;
 import com.offnine.carten.modal.Seller;
 import com.offnine.carten.modal.Transaction;
 import com.offnine.carten.service.SellerService;

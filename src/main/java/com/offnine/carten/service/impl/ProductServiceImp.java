@@ -115,7 +115,7 @@ public class ProductServiceImp implements ProductService{
     }
 
     public Page<Product> getAllProduct(String category, String brand, String colors, String sizes, Integer minPrice,
-            Integer maxPrice, Integer minDiscount, String sort, String stock, Integer pageNUmber) {
+            Integer maxPrice, Integer minDiscount, String sort, String stock, Integer pageNumber) {
                 Specification<Product> spec =(root,query,criteriaBuilder)->{
                                    List<jakarta.persistence.criteria.Predicate> predicates = new ArrayList<>();
                                    if(category!=null){
@@ -134,11 +134,14 @@ public class ProductServiceImp implements ProductService{
                                 
                                     }
 
-                                    if(maxPrice!=null){
-                                    
-                                        predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("sellingPrice"), maxPrice));
-                                    
-                                        }
+                                    if (minPrice != null) {
+                                        predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("sellingPrice"), minPrice));
+                                    }
+                    
+                                    // Add maximum price filter if not null
+                                    if (maxPrice != null) {
+                                        predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("sellingPrice"), maxPrice));
+                                    }
                                         if(minDiscount!=null){
                                     
                                             predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("discountPrice"), minDiscount));
@@ -157,19 +160,19 @@ public class ProductServiceImp implements ProductService{
                 if(sort!=null && !sort.isEmpty()){
                     switch(sort){
                         case "price_low":
-                        pageable = PageRequest.of(pageNUmber != null ? pageNUmber : 0, 10,org.springframework.data.domain.Sort.by("sellingPrice").ascending());
+                        pageable = PageRequest.of(pageNumber != null ? pageNumber : 0, 10,org.springframework.data.domain.Sort.by("sellingPrice").ascending());
                         break;
                         case "price_high":
-                        pageable = PageRequest.of(pageNUmber != null ? pageNUmber : 0, 10,org.springframework.data.domain.Sort.by("sellingPrice").descending());
+                        pageable = PageRequest.of(pageNumber != null ? pageNumber : 0, 10,org.springframework.data.domain.Sort.by("sellingPrice").descending());
                         break;
 
                         default:
-                        pageable = PageRequest.of(pageNUmber != null ? pageNUmber : 0, 10,org.springframework.data.domain.Sort.unsorted());
+                        pageable = PageRequest.of(pageNumber != null ? pageNumber : 0, 10,org.springframework.data.domain.Sort.unsorted());
                         break;
                     }
                 }
                 else{
-                    pageable =PageRequest.of(pageNUmber !=null ? pageNUmber:0, 10,org.springframework.data.domain.Sort.unsorted());
+                    pageable =PageRequest.of(pageNumber !=null ? pageNumber:0, 10,org.springframework.data.domain.Sort.unsorted());
                 }
        return productRepo.findAll( spec,pageable);
     }

@@ -45,8 +45,13 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Cart findUserCart(User user) {  //9.15
-       Cart cart =cartRepo.findByUserId(user.getId());
+    public Cart findUserCart(User user) { 
+        //9.15
+        Cart cart =cartRepo.findByUserId(user.getId());
+    if(cart==null){
+        return null;
+    }
+        
        
         int totalPrice =0;
         int totalDiscountedPrice=0;
@@ -82,3 +87,5 @@ public class CartServiceImpl implements CartService {
      }
  
 }
+
+

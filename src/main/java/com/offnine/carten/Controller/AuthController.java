@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.offnine.carten.Repo.UserRepo;
 import com.offnine.carten.domain.USER_ROLE;
-import com.offnine.carten.modal.User;
-import com.offnine.carten.modal.VerificationCode;
 import com.offnine.carten.reponse.ApiResponse;
 import com.offnine.carten.reponse.AuthResponse;
 import com.offnine.carten.reponse.SignUpRequest;
