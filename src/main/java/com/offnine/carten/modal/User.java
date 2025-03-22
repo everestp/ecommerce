@@ -12,7 +12,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.OneToMany;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,8 +46,8 @@ public class User {
 
     private USER_ROLE role = USER_ROLE.ROLE_CUSTOMER;
 
-    // // @OneToMany
-    // private Set<Address> addresses = new HashSet<>();
+    @OneToMany
+     private Set<Address> addresses = new HashSet<>();
     
     @ManyToMany
     @JsonIgnore
