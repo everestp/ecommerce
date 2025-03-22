@@ -1,10 +1,12 @@
 package com.offnine.carten.modal;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -24,8 +26,8 @@ public class Deal{
 
     private Integer discount;
 
-    // @OneToMany
-    // private HomeCategory category;
+     @OneToOne
+     private HomeCategory category;
 
     
 

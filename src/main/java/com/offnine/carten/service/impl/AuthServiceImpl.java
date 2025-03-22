@@ -16,12 +16,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.offnine.carten.Repo.CartRepo;
 import com.offnine.carten.Repo.UserRepo;
+import com.offnine.carten.Repo.VerificationCodeRepo;
+import com.offnine.carten.Utils.OtpUtil;
 import com.offnine.carten.config.JwtProvider;
 import com.offnine.carten.domain.USER_ROLE;
 import com.offnine.carten.modal.Cart;
 import com.offnine.carten.modal.User;
+import com.offnine.carten.modal.VerificationCode;
 import com.offnine.carten.reponse.SignUpRequest;
 import com.offnine.carten.service.AuthService;
+import com.offnine.carten.service.EmailService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -41,9 +45,22 @@ public class AuthServiceImpl implements AuthService{
 
         @Autowired
         private JwtProvider jwtProvider;
+        
 
+
+        
+        private final  VerificationCodeRepo verificationCodeRepo;
+        private final EmailService emailService;
+       
     @Override
-    public String createUser(SignUpRequest req) {
+    public String createUser(SignUpRequest req) throws Exception {
+
+        VerificationCode verificationCode = verificationCodeRepo.findByEmail(req.getEmail());
+        if(verificationCode==null || !verificationCode.getOtp().equals(req.getOtp())){
+            throw new Exception("Wrong OTP.....");
+        }
+       
+
         User user = userRepo.findByEmail(req.getEmail());
         if(user==null){
             User createdUser = new User();
@@ -65,6 +82,33 @@ public class AuthServiceImpl implements AuthService{
 
         return jwtProvider.generateToken(authentication);
         
+    }
+
+    @Override
+    public void sentLoginOtp(String email) throws Exception {
+        String SIGNING_PREFIX ="signing_";
+        if(email.startsWith(SIGNING_PREFIX)){
+            email = email.substring(SIGNING_PREFIX.length());
+            User user =userRepo.findByEmail(email);
+            if(user==null){
+                throw new Exception("User not found with email");
+            }
+        }
+        VerificationCode isExist = verificationCodeRepo.findByEmail(email);
+        if(isExist!=null){
+            verificationCodeRepo.delete(isExist);
+        }
+        String otp =OtpUtil.generateOtp();
+        VerificationCode verificationCode = new VerificationCode();
+        verificationCode.setOtp(otp);
+        verificationCode.setEmail(email);
+         verificationCodeRepo.save(verificationCode);
+         String  subject ="Carten -The Ecommerce App";
+         String text = "Your login/signup OTP: " + otp;
+        emailService.sendVerficationOtpEmail(email, otp, subject, text);
+
+
+
     }
     
 }

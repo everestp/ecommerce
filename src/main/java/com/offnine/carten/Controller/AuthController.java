@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.offnine.carten.Repo.UserRepo;
 import com.offnine.carten.domain.USER_ROLE;
 import com.offnine.carten.modal.User;
+import com.offnine.carten.modal.VerificationCode;
+import com.offnine.carten.reponse.ApiResponse;
 import com.offnine.carten.reponse.AuthResponse;
 import com.offnine.carten.reponse.SignUpRequest;
 import com.offnine.carten.service.AuthService;
@@ -26,7 +28,7 @@ private AuthService authService;
 
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthResponse> createUserHandler(@RequestBody SignUpRequest req){
+    public ResponseEntity<AuthResponse> createUserHandler(@RequestBody SignUpRequest req)  throws Exception{
 
    String jwt = authService.createUser(req);
    AuthResponse res = new AuthResponse();
@@ -39,4 +41,18 @@ private AuthService authService;
         
         
     }
-}
+
+    @PostMapping("/sent/login-signup-otp")
+    public ResponseEntity<ApiResponse> sentOtpHandler(@RequestBody VerificationCode req)  throws Exception{
+
+  authService.sentLoginOtp(req.getEmail());
+ApiResponse res = new ApiResponse();
+res.setMessage("otp sent sucessfully");
+            return ResponseEntity.ok(res);
+
+
+    }
+}    
+        
+    
+

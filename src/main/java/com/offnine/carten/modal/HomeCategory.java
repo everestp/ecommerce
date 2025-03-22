@@ -30,7 +30,7 @@ public class HomeCategory {
 
     private String categoryId;
 
-    private HomeCategorySection section;
+    private HomeCategorySection section = HomeCategorySection.ELECTRIC_CATEGORY;
     
 
 
