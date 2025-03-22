@@ -13,6 +13,7 @@ import com.offnine.carten.modal.User;
 import com.offnine.carten.modal.VerificationCode;
 import com.offnine.carten.reponse.ApiResponse;
 import com.offnine.carten.reponse.AuthResponse;
+import com.offnine.carten.reponse.LoginRequest;
 import com.offnine.carten.reponse.SignUpRequest;
 import com.offnine.carten.service.AuthService;
 
@@ -51,6 +52,16 @@ res.setMessage("otp sent sucessfully");
             return ResponseEntity.ok(res);
 
 
+    }
+
+
+    @PostMapping("/signin")
+    public ResponseEntity<AuthResponse> loginHandler(@RequestBody LoginRequest req)  throws Exception{
+
+        AuthResponse authResponse =  authService.signing(req);
+                  return ResponseEntity.ok(authResponse);
+        
+        
     }
 }    
         

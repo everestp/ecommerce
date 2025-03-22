@@ -1,16 +1,21 @@
 package com.offnine.carten.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.configurers.provisioning.UserDetailsManagerConfigurer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +28,8 @@ import com.offnine.carten.domain.USER_ROLE;
 import com.offnine.carten.modal.Cart;
 import com.offnine.carten.modal.User;
 import com.offnine.carten.modal.VerificationCode;
+import com.offnine.carten.reponse.AuthResponse;
+import com.offnine.carten.reponse.LoginRequest;
 import com.offnine.carten.reponse.SignUpRequest;
 import com.offnine.carten.service.AuthService;
 import com.offnine.carten.service.EmailService;
@@ -51,6 +58,7 @@ public class AuthServiceImpl implements AuthService{
         
         private final  VerificationCodeRepo verificationCodeRepo;
         private final EmailService emailService;
+        private final CustomUserServiceImpl customUserService;
        
     @Override
     public String createUser(SignUpRequest req) throws Exception {
@@ -109,6 +117,39 @@ public class AuthServiceImpl implements AuthService{
 
 
 
+    }
+
+    @Override
+    public AuthResponse signing(LoginRequest req) {
+        String userName = req.getEmail();
+        String otp = req.getOtp();
+        Authentication authentication = authentication(userName,otp);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtProvider.generateToken(authentication);
+        AuthResponse authResponse = new AuthResponse();
+        authResponse.setJwt(token);
+        authResponse.setMessege("Login Successfull");
+
+
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        String roleName = authorities.isEmpty()?null:authorities.iterator().next().getAuthority();
+        authResponse.setRole(USER_ROLE.valueOf(roleName));
+
+                return authResponse;
+
+    }
+    private Authentication authentication(String userName, String otp){
+       UserDetails userDetails = customUserService.loadUserByUsername(userName);
+       if(userDetails == null){
+        throw new BadCredentialsException("Invalid username");
+       }
+       VerificationCode verificationCode = verificationCodeRepo.findByEmail(userName);
+       if(verificationCode==null || !verificationCode.getOtp().equals(otp)){
+        throw new BadCredentialsException("Wrong OTP");
+       }
+       return  new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+
+    
     }
     
 }
